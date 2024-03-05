@@ -1,0 +1,54 @@
+﻿@model List<ToDoItem>
+
+@{
+    Layout = "_Layout";
+}
+
+<h1 class="text-center">To Do List</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-controller="Home" asp-action="Index" method="get">
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="Search by Id" name="id" />
+                <button class="btn btn-outline-secondary" type="submit">Search</button>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-6 text-right">
+        <a href="@Url.Action("AddItem", "Home")" class="btn btn-primary">Add New Item</a>
+    </div>
+</div>
+
+@if (Model != null && Model.Count > 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Job Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.JobName</td>
+                    <td>
+                        <a href="@Url.Action("GetById", "Home", new { id = item.Id })" class="btn btn-info btn-sm">Details</a>
+                        <a href="@Url.Action("UpdateItem", "Home", new { id = item.Id })" class="btn btn-warning btn-sm">Edit</a>
+                        <form asp-action="DeleteItem" asp-controller="Home" asp-route-id="@item.Id" method="post" class="d-inline">
+                            <input type="submit" value="Delete" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this item?');" />
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No items found.</p>
+}
